@@ -6,6 +6,7 @@ from __future__ import unicode_literals
 
 from django import template
 from django.contrib.staticfiles.storage import staticfiles_storage
+from django.template.base import TOKEN_VAR, TOKEN_TEXT, TOKEN_BLOCK
 from django.utils import six
 
 from djangojs import JQUERY_MIGRATE_VERSION
@@ -39,14 +40,14 @@ def verbatim_tags(parser, token, endtagname):
         if token.contents == endtagname:
             break
 
-        if token.token_type == template.TOKEN_VAR:
+        if token.token_type == TOKEN_VAR:
             text_and_nodes.append('{{')
             text_and_nodes.append(token.contents)
 
-        elif token.token_type == template.TOKEN_TEXT:
+        elif token.token_type == TOKEN_TEXT:
             text_and_nodes.append(token.contents)
 
-        elif token.token_type == template.TOKEN_BLOCK:
+        elif token.token_type == TOKEN_BLOCK:
             try:
                 command = token.contents.split()[0]
             except IndexError:
@@ -63,7 +64,7 @@ def verbatim_tags(parser, token, endtagname):
                     raise
             text_and_nodes.append(node)
 
-        if token.token_type == template.TOKEN_VAR:
+        if token.token_type == TOKEN_VAR:
             text_and_nodes.append('}}')
 
     return text_and_nodes
